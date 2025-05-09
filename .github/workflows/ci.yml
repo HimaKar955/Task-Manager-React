@@ -2,53 +2,62 @@ name: UI CI
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  setup:
-    runs-on: ubuntu-22.04
-    outputs:
-      node_modules: ${{ steps.cache.outputs.cache-hit }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'yarn'
-
-      - run: yarn install --frozen-lockfile
-
   lint:
     runs-on: ubuntu-22.04
-    needs: setup
+    name: Lint
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: yarn install --frozen-lockfile
+      - run: yarn
       - run: yarn lint
 
   build:
     runs-on: ubuntu-22.04
     needs: lint
+    name: Build
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: yarn install --frozen-lockfile
+      - run: yarn
       - run: yarn build
 
   test:
     runs-on: ubuntu-22.04
     needs: build
+    name: Test
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: yarn install --frozen-lockfile
+      - run: yarn
       - run: yarn test
+
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: test
+    name: Deploy to GitHub Pages
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: yarn
+      - name: Build the project
+        run: yarn build # Ensure the build step is executed here
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build # Specify the folder containing the build output
