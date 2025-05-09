@@ -1,6 +1,7 @@
 {
   "name": "vite-react-typescript-tailwind-starter",
   "version": "0.0.0",
+  "homepage": "https://himakar955.github.io/Task-Manager-React",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
