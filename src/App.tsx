@@ -43,8 +43,10 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <TaskForm onAdd={addTask} />
+    <div className="max-w-screen-lg mx-auto p-4 w-full">
+      <div className="max-w-md mx-auto">
+        <TaskForm onAdd={addTask} />
+      </div>
       <TaskList
         tasks={tasks}
         onToggle={toggleTaskStatus}
