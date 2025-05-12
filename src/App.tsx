@@ -34,6 +34,14 @@ const App: React.FC = () => {
     setTasks((prev) => prev.filter((task) => task.id !== id))
   }
 
+  const editTask = (id: number, title: string, description: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, title, description } : task
+      )
+    )
+  }
+
   return (
     <div className="max-w-xl mx-auto p-4">
       <TaskForm onAdd={addTask} />
@@ -41,6 +49,7 @@ const App: React.FC = () => {
         tasks={tasks}
         onToggle={toggleTaskStatus}
         onDelete={deleteTask}
+        onEdit={editTask}
       />
     </div>
   )
